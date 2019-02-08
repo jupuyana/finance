@@ -1,0 +1,27 @@
+*This project is developed in python and follows the article "An End-to-End Project on Time Series Analysis and 
+*Forecasting with Python" by Susan Li, available at:
+*https://towardsdatascience.com/an-end-to-end-project-on-time-series-analysis-and-forecasting-with-python-4835e6bf050b
+*The project uses the same data as in the article, but diverges in several areas.
+
+*Data used for this project can be found here: https://community.tableau.com/docs/DOC-1236
+
+*import tools
+import warnings
+import itertools
+import numpy as np
+import matplotlib.pyplot as plt
+warnings.filterwarnings("ignore")
+plt.style.use('fivethirtyeight')
+import pandas as pd
+import statsmodels.api as sm
+import matplotlib
+
+*settings for matplotlib
+matplotlib.rcParams['axes.labelsize'] = 14
+matplotlib.rcParams['xtick.labelsize'] = 12
+matplotlib.rcParams['ytick.labelsize'] = 12
+matplotlib.rcParams['text.color'] = 'k'
+
+*read data, first exercise uses Furniture only
+df = pd.read_excel("Superstore.xls")
+furniture = df.loc[df['Category'] == 'Furniture']
