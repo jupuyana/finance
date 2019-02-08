@@ -1,4 +1,4 @@
-*This project is developed in python and follows the article "An End-to-End Project on Time Series Analysis and 
+##This project is developed in python and follows the article "An End-to-End Project on Time Series Analysis and 
 *Forecasting with Python" by Susan Li, available at:
 *https://towardsdatascience.com/an-end-to-end-project-on-time-series-analysis-and-forecasting-with-python-4835e6bf050b
 *The project uses the same data as in the article, but diverges in several areas.
