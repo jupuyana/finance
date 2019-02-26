@@ -1,1 +1,63 @@
+# This code is based of the guide "A Basic Credit Analysis in R" and can be found in the
+# link https://tinyurl.com/y6cusjq8.
+# The code tries to analyze credit informaiton to say if an individual is credit worthy.
 
+# Clear everything
+rm(list=ls())
+
+# Set the working directory
+setwd("C:/Users/puyan/Google Drive/11. R/0. Basic Credit Analysis")
+
+# load necessary packages
+library(ROCR)
+library(gplots)
+
+# Download the data, it has been dwnloaded to the WD if link is changed in the future
+url <- 'https://newonlinecourses.science.psu.edu/onlinecourses/sites/stat508/files/german_credit.csv'
+credit <- read.csv(url, header = TRUE, sep = ',')
+
+# Correction for a factor  that is causing problems later on
+# credit$No.of.Credits.at.this.Bank[credit$No.of.Credits.at.this.Bank == 4] <- 3
+
+# We generate a subgroup of variables that contain the relevant information to credit worthiness.
+# This implies removing age (?), duration of credit (?) and credit amount (?).
+S <- c(1, 2, 4, 5, 7, 8, 9, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20)
+
+# We now want R to recognize these variables as factors
+for(i in S) credit[, i] <- as.factor(credit[, i])
+
+# Method 1: Logistic Regression
+# 1. Divide the samepl in testing and training sample
+n <- length(credit[,i])
+i_test1 <- sample(1:nrow(credit), size = n/3)
+i_cali1 <- (1:nrow(credit))[-i_test1]
+
+# 2. Run model using glm function
+set.seed(1)
+Logit1 <- glm(Creditability ~ Account.Balance + Payment.Status.of.Previous.Credit +
+              Purpose + Length.of.current.employment + Sex...Marital.Status, 
+              family = binomial, data = credit[i_cali1,])
+
+# 3. Predict the fit of the model
+fitLog1 <- predict(Logit1, type = 'response', newdata = credit[i_test1,])
+
+pred1 <- prediction(fitLog1, credit$Creditability[i_test1])
+perf1 <- performance(pred1, 'tpr', 'fpr')
+
+# 4. Plot the results
+
+plot(perf1)
+
+AUCLog1 <- performance(pred1, measure = 'auc')@y.values[[1]]
+AUCLog1
+
+# Method 2: Logistic Regression with all variables
+
+set.seed(1)
+Logit2 <- glm(Creditability ~ ., family = binomial, data = credit[i_cali1, ])
+fitLog2 <- predict(Logit2, type = 'response', newdata = credit[i_test1, ])
+pred2 <- prediction(fitLog2, credit$Creditability[i_test1])
+perf2 <- performance(pred2, 'tpr', 'fpr')
+plot(perf2)
+AUCLog2 <- performance(pred2, measure = 'auc')@y.values[[1]]
+AUCLog2
